@@ -70,7 +70,3 @@ module.exports = {
     update,
     destroy,
 };
-
-
-
-
