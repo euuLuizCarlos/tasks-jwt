@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - To-Do List</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Registro</h2>
+        <div id="message-container"></div>
+        <form id="registerForm">
+            <input type="text" id="name" placeholder="Nome Completo" required>
+            <input type="text" id="username" placeholder="Usuário" required>
+            <input type="password" id="password" placeholder="Senha" required>
+            <button type="submit">Cadastrar</button>
+        </form>
+        <div class="link">
+            Já tem uma conta? <a href="/login">Faça login</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageContainer = document.getElementById('message-container');
+            try {
+                const response = await fetch('/api/user/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, username, password })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    messageContainer.innerHTML = '<span class="success-message">Usuário cadastrado com sucesso! Redirecionando...</span>';
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    messageContainer.innerHTML = `<span class="error-message">${data.error || 'Erro ao registrar usuário.'}</span>`;
+                }
+            } catch (error) {
+                messageContainer.innerHTML = '<span class="error-message">Erro ao conectar com o servidor.</span>';
+            }
+        });
+    </script>
+</body>
+</html>
